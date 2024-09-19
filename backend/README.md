@@ -1,4 +1,4 @@
-# Todo Management API
+# NEXUX API
 
 A RESTful API built with Node.js, Express.js, and MongoDB for managing users and their todos. This API supports user authentication, including signup and login, and allows users to create, read, update, and delete their todos.
 
