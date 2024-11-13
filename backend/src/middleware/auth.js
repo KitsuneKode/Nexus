@@ -31,6 +31,12 @@ module.exports = async (req, res, next) => {
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({ message: 'Token expired' });
     }
-    res.status(500).json({ message: 'Internal server error' });
+    if (error.name === 'TypeError') {
+      return res.status(401).json({ message: 'Token is not provided' });
+    }
+
+    res
+      .status(500)
+      .json({ message: 'Internal server error', error: error.message });
   }
 };
