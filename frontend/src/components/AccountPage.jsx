@@ -1,9 +1,8 @@
-"use client";
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 import {
   User,
   Mail,
@@ -14,17 +13,17 @@ import {
   LogOut,
   Sun,
   Moon,
-} from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function MyAccount() {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    name: "Jane Doe",
-    email: "jane.doe@example.com",
-    joinDate: "January 15, 2023",
-    avatarUrl: "/placeholder.svg?height=128&width=128",
+    name: 'Jane Doe',
+    email: 'jane.doe@example.com',
+    joinDate: 'January 15, 2023',
+    avatarUrl: '/placeholder.svg?height=128&width=128',
   });
   const [todoStats, setTodoStats] = useState({
     total: 15,
@@ -36,17 +35,17 @@ export default function MyAccount() {
 
   useEffect(() => {
     // Check localStorage for theme preference
-    const storedTheme = localStorage.getItem("theme");
+    const storedTheme = localStorage.getItem('theme');
 
     // If theme is set in localStorage, use it
-    if (storedTheme === "dark") {
+    if (storedTheme === 'dark') {
       setIsDarkTheme(true);
-    } else if (storedTheme === "light") {
+    } else if (storedTheme === 'light') {
       setIsDarkTheme(false);
     } else {
       // If not set in localStorage, use system preference
       const prefersDarkScheme = window.matchMedia(
-        "(prefers-color-scheme: dark)"
+        '(prefers-color-scheme: dark)'
       ).matches;
       setIsDarkTheme(prefersDarkScheme);
     }
@@ -56,8 +55,8 @@ export default function MyAccount() {
     <div
       className={`min-h-screen flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300 ${
         isDarkTheme
-          ? "bg-gray-900"
-          : "bg-gradient-to-br from-teal-50 to-blue-50"
+          ? 'bg-gray-900'
+          : 'bg-gradient-to-br from-teal-50 to-blue-50'
       }`}
     >
       {/* Geometric background pattern */}
@@ -66,7 +65,7 @@ export default function MyAccount() {
           <div
             key={i}
             className={`absolute transform rotate-45 ${
-              isDarkTheme ? "bg-teal-400" : "bg-teal-500"
+              isDarkTheme ? 'bg-teal-400' : 'bg-teal-500'
             }`}
             style={{
               width: `${Math.random() * 100 + 50}px`,
@@ -80,31 +79,31 @@ export default function MyAccount() {
       </div>
       <Card
         className={`w-full max-w-2xl p-8 ${
-          isDarkTheme ? "bg-gray-800 bg-opacity-80" : "bg-white bg-opacity-80"
+          isDarkTheme ? 'bg-gray-800 bg-opacity-80' : 'bg-white bg-opacity-80'
         } backdrop-blur-lg border-gray-200 shadow-2xl rounded-3xl relative overflow-hidden`}
       >
         {/* Animated geometric shapes */}
         <div
           className={`absolute top-0 left-0 w-32 h-32 ${
             isDarkTheme
-              ? "bg-gradient-to-br from-teal-700 to-blue-700"
-              : "bg-gradient-to-br from-teal-200 to-blue-200"
+              ? 'bg-gradient-to-br from-teal-700 to-blue-700'
+              : 'bg-gradient-to-br from-teal-200 to-blue-200'
           } rounded-br-full opacity-50 animate-pulse`}
         />
         <div
           className={`absolute bottom-0 right-0 w-48 h-48 ${
             isDarkTheme
-              ? "bg-gradient-to-tl from-teal-700 to-blue-700"
-              : "bg-gradient-to-tl from-teal-200 to-blue-200"
+              ? 'bg-gradient-to-tl from-teal-700 to-blue-700'
+              : 'bg-gradient-to-tl from-teal-200 to-blue-200'
           } rounded-tl-full opacity-50 animate-pulse`}
-          style={{ animationDelay: "1s" }}
+          style={{ animationDelay: '1s' }}
         />
 
         <div className="relative z-10">
           <div className="flex justify-between items-center mb-8">
             <h1
               className={`text-3xl font-bold ${
-                isDarkTheme ? "text-white" : "text-gray-800"
+                isDarkTheme ? 'text-white' : 'text-gray-800'
               }`}
             >
               Account Information
@@ -112,14 +111,14 @@ export default function MyAccount() {
             <Button
               onClick={() => {
                 setIsDarkTheme(!isDarkTheme);
-                localStorage.theme = isDarkTheme ? "light" : "dark";
+                localStorage.theme = isDarkTheme ? 'light' : 'dark';
               }}
               variant="outline"
               size="icon"
               className={`rounded-full ${
                 isDarkTheme
-                  ? "bg-gray-700 text-yellow-400 hover:bg-gray-600"
-                  : "bg-gray-200 text-gray-900 hover:bg-gray-300"
+                  ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600'
+                  : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
               }`}
             >
               {isDarkTheme ? (
@@ -135,15 +134,15 @@ export default function MyAccount() {
               <AvatarImage src={userInfo.avatarUrl} alt={userInfo.name} />
               <AvatarFallback>
                 {userInfo.name
-                  .split("")
+                  .split('')
                   .map((n) => n[0])
-                  .join("")}
+                  .join('')}
               </AvatarFallback>
             </Avatar>
             <div className="flex-grow">
               <div
                 className={`mb-4 ${
-                  isDarkTheme ? "text-white" : "text-gray-800"
+                  isDarkTheme ? 'text-white' : 'text-gray-800'
                 }`}
               >
                 <p className="flex items-center mb-2">
@@ -158,7 +157,7 @@ export default function MyAccount() {
               </div>
               <div
                 className={`mb-4 ${
-                  isDarkTheme ? "text-white" : "text-gray-800"
+                  isDarkTheme ? 'text-white' : 'text-gray-800'
                 }`}
               >
                 <h2 className="text-xl font-semibold mb-2">Todo Statistics</h2>
@@ -166,14 +165,14 @@ export default function MyAccount() {
                   <Circle className="mr-2" /> Total Todos: {todoStats.total}
                 </p>
                 <p className="flex items-center mb-2">
-                  <CheckCircle className="mr-2" /> Completed Todos:{" "}
+                  <CheckCircle className="mr-2" /> Completed Todos:{' '}
                   {todoStats.completed}
                 </p>
               </div>
               <div className="mb-4">
                 <h3
                   className={`text-lg font-semibold mb-2 ${
-                    isDarkTheme ? "text-white" : "text-gray-800"
+                    isDarkTheme ? 'text-white' : 'text-gray-800'
                   }`}
                 >
                   Completion Progress
@@ -185,7 +184,7 @@ export default function MyAccount() {
                 />
                 <p
                   className={`text-sm mt-1 ${
-                    isDarkTheme ? "text-gray-300" : "text-gray-600"
+                    isDarkTheme ? 'text-gray-300' : 'text-gray-600'
                   }`}
                 >
                   {completionPercentage.toFixed(1)}% Complete
@@ -197,13 +196,13 @@ export default function MyAccount() {
           <div className="mt-8 flex flex-row justify-between">
             <Button
               className="flex items-center bg-teal-500 hover:bg-teal-600 text-white"
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate('/dashboard')}
             >
               <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
             </Button>
             <Button
               className="flex items-center bg-teal-700 hover:bg-teal-600 text-white"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate('/login')}
             >
               Logout
               <LogOut className="mx-2 h-4 w-4" />

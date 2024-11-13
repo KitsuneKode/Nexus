@@ -1,42 +1,40 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
-import { User, Mail, Lock, Loader2, Sun, Moon } from "lucide-react";
-import { Alert } from "./ui/alert";
-import { useNavigate, useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
-import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card } from '@/components/ui/card';
+import { User, Mail, Lock, Loader2, Sun, Moon } from 'lucide-react';
+import { Alert } from './ui/alert';
+import { useNavigate, useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { useToast } from '@/hooks/use-toast';
 
 export default function SignupForm({ initialPage }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [signUpPage, setSignUpPage] = useState(initialPage === "signup");
-  const [username, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [alert, setAlert] = useState("");
-  const [error, setError] = useState("");
+  const [signUpPage, setSignUpPage] = useState(initialPage === 'signup');
+  const [username, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [alert, setAlert] = useState('');
+  const [error, setError] = useState('');
   const [isDarkTheme, setIsDarkTheme] = useState(
-    localStorage.theme === "dark" // Retrieve the theme preference from local storage
+    localStorage.theme === 'dark' // Retrieve the theme preference from local storage
   );
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
 
   useEffect(() => {
-    console.log("Email:", email);
-    console.log("Password", password);
-    console.log("User Name", username);
+    console.log('Email:', email);
+    console.log('Password', password);
+    console.log('User Name', username);
   }, [email, password, username]);
 
   useEffect(() => {
     // Sync the page state based on the URL path
-    if (location.pathname === "/signup") {
+    if (location.pathname === '/signup') {
       setSignUpPage(true);
-    } else if (location.pathname === "/login") {
+    } else if (location.pathname === '/login') {
       setSignUpPage(false);
     }
   }, [location.pathname]);
@@ -45,20 +43,20 @@ export default function SignupForm({ initialPage }) {
     // Check if we were redirected from a private route
     if (location.state?.fromPrivateRoute) {
       toast({
-        title: "Access Denied",
-        description: "Please log in to access that page.",
-        variant: "destructive",
+        title: 'Access Denied',
+        description: 'Please log in to access that page.',
+        variant: 'destructive',
       });
     }
   }, [location.state, toast]);
 
   useEffect(() => {
-    setPassword("");
+    setPassword('');
   }, [signUpPage]);
 
   useEffect(() => {
     // Save the theme preference to local storage
-    localStorage.theme = isDarkTheme ? "dark" : "light";
+    localStorage.theme = isDarkTheme ? 'dark' : 'light';
   }, [isDarkTheme]);
 
   const handleSubmit = async (e) => {
@@ -67,88 +65,88 @@ export default function SignupForm({ initialPage }) {
 
     if (signUpPage) {
       try {
-        const response = await fetch("http://localhost:3000/api/signup", {
-          method: "POST",
+        const response = await fetch('http://localhost:3000/api/signup', {
+          method: 'POST',
           body: JSON.stringify({
             username,
             email,
             password,
           }),
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         });
         if (response.ok) {
           const data = await response.json();
-          setAlert("Account created successfully");
+          setAlert('Account created successfully');
           console.log(data);
         } else {
           const data = await response.json();
           setError(
-            "Registration failed. Please try again later." + data.message
+            'Registration failed. Please try again later.' + data.message
           );
         }
       } catch (error) {
-        setError("An error occurred. Please try again later." + error);
-        console.error("Error:", error);
+        setError('An error occurred. Please try again later.' + error);
+        console.error('Error:', error);
       }
     } else {
       try {
-        const response = await fetch("http://localhost:3000/api/login", {
-          method: "POST",
+        const response = await fetch('http://localhost:3000/api/login', {
+          method: 'POST',
           body: JSON.stringify({
             email,
             password,
           }),
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         });
         if (response.ok) {
           const data = await response.json();
-          localStorage.setItem("token", data.token);
+          localStorage.setItem('token', data.token);
           console.log(data);
         } else {
           const data = await response.json();
-          setError("Login Failed. " + data.message);
+          setError('Login Failed. ' + data.message);
         }
       } catch (error) {
-        setError("An error occurred. Please try again later." + error);
-        console.error("Error:", error);
+        setError('An error occurred. Please try again later.' + error);
+        console.error('Error:', error);
       }
     }
     setTimeout(() => {
       setIsLoading(false);
-      setAlert("");
-      setError("");
+      setAlert('');
+      setError('');
       if (signUpPage) {
         setSignUpPage(false);
       } else {
         // Redirect to dashboard
-        console.log("Redirect to dashboard");
-        navigate("/dashboard");
+        console.log('Redirect to dashboard');
+        navigate('/dashboard');
       }
     }, 1000);
   };
 
   const toggleTheme = () => {
     setIsDarkTheme(!isDarkTheme);
-    localStorage.theme = isDarkTheme ? "light" : "dark";
+    localStorage.theme = isDarkTheme ? 'light' : 'dark';
   };
 
   const handlePageToggle = () => {
     setSignUpPage(!signUpPage);
     if (signUpPage) {
-      navigate("/login");
+      navigate('/login');
     } else {
-      navigate("/signup");
+      navigate('/signup');
     }
   };
 
   return (
     <div
       className={`min-h-screen flex items-center justify-center p-4 relative overflow-hidden ${
-        isDarkTheme ? "bg-gray-900 text-white" : "bg-teal-50 text-gray-900"
+        isDarkTheme ? 'bg-gray-900 text-white' : 'bg-teal-50 text-gray-900'
       }`}
     >
       {/* Geometric background pattern */}
@@ -170,7 +168,7 @@ export default function SignupForm({ initialPage }) {
       </div>
       <Card
         className={`w-full max-w-md p-8 border-gray-200 shadow-xl rounded-xl relative overflow-hidden ${
-          isDarkTheme ? "bg-gray-800 border-gray-600" : "bg-white"
+          isDarkTheme ? 'bg-gray-800 border-gray-600' : 'bg-white'
         }`}
       >
         {/* Animated geometric shapes */}
@@ -187,8 +185,8 @@ export default function SignupForm({ initialPage }) {
             size="icon"
             className={`rounded-full ${
               isDarkTheme
-                ? "bg-gray-700 text-yellow-400 hover:bg-gray-600"
-                : "bg-gray-200 text-gray-900 hover:bg-gray-300"
+                ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600'
+                : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
             }`}
           >
             {isDarkTheme ? (
@@ -197,24 +195,24 @@ export default function SignupForm({ initialPage }) {
               <Moon className="h-[1.2rem] w-[1.2rem]" />
             )}
             <span className="sr-only">
-              {isDarkTheme ? "Switch to light mode" : "Switch to dark mode"}
+              {isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}
             </span>
           </Button>
           <div className="text-center mb-8">
             <h1
               className={`text-3xl font-bold mb-2 ${
-                !isDarkTheme ? "text-gray-900" : "text-gray-50"
+                !isDarkTheme ? 'text-gray-900' : 'text-gray-50'
               }`}
             >
-              {signUpPage ? "Create an Account" : "Log In"}
+              {signUpPage ? 'Create an Account' : 'Log In'}
             </h1>
 
             <p
-              className={`${!isDarkTheme ? "text-gray-600" : "text-gray-200"} `}
+              className={`${!isDarkTheme ? 'text-gray-600' : 'text-gray-200'} `}
             >
               {signUpPage
-                ? "Join us and start your journey"
-                : "Log in to your account"}
+                ? 'Join us and start your journey'
+                : 'Log in to your account'}
             </p>
           </div>
           {alert && (
@@ -222,8 +220,8 @@ export default function SignupForm({ initialPage }) {
               variant="success"
               className={`mb-4 ${
                 isDarkTheme
-                  ? "bg-gray-700 text-white"
-                  : "bg-teal-500 text-zinc-900"
+                  ? 'bg-gray-700 text-white'
+                  : 'bg-teal-500 text-zinc-900'
               }`}
             >
               {alert}
@@ -234,8 +232,8 @@ export default function SignupForm({ initialPage }) {
               variant="destructive"
               className={`mb-4 ${
                 isDarkTheme
-                  ? "bg-gray-700 text-white"
-                  : "bg-red-500 text-zinc-900"
+                  ? 'bg-gray-700 text-white'
+                  : 'bg-red-500 text-zinc-900'
               }`}
             >
               {error}
@@ -247,7 +245,7 @@ export default function SignupForm({ initialPage }) {
                 <Label
                   htmlFor="name"
                   className={`flex items-center ${
-                    isDarkTheme ? "text-gray-300" : "text-gray-700"
+                    isDarkTheme ? 'text-gray-300' : 'text-gray-700'
                   }`}
                 >
                   <User className="w-4 h-4 mr-2 text-teal-600" />
@@ -260,8 +258,8 @@ export default function SignupForm({ initialPage }) {
                   required
                   className={`bg-white border-2 border-teal-200 placeholder-gray-500 focus:ring-2 focus:ring-teal-500 ${
                     isDarkTheme
-                      ? "text-gray-200 bg-gray-800 border-gray-600 placeholder-gray-500 focus:ring-teal-400"
-                      : "text-gray-900"
+                      ? 'text-gray-200 bg-gray-800 border-gray-600 placeholder-gray-500 focus:ring-teal-400'
+                      : 'text-gray-900'
                   }`}
                   onChange={(e) => setUserName(e.target.value)}
                 />
@@ -271,7 +269,7 @@ export default function SignupForm({ initialPage }) {
               <Label
                 htmlFor="email"
                 className={`flex items-center ${
-                  isDarkTheme ? "text-gray-300" : "text-gray-700"
+                  isDarkTheme ? 'text-gray-300' : 'text-gray-700'
                 }`}
               >
                 <Mail className="w-4 h-4 mr-2 text-teal-600" />
@@ -284,8 +282,8 @@ export default function SignupForm({ initialPage }) {
                 required
                 className={`bg-white border-2 border-teal-200 placeholder-gray-500 focus:ring-2 focus:ring-teal-500 ${
                   isDarkTheme
-                    ? "text-gray-200 bg-gray-800 border-gray-600 placeholder-gray-500 focus:ring-teal-400"
-                    : "text-gray-900"
+                    ? 'text-gray-200 bg-gray-800 border-gray-600 placeholder-gray-500 focus:ring-teal-400'
+                    : 'text-gray-900'
                 }`}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -294,7 +292,7 @@ export default function SignupForm({ initialPage }) {
               <Label
                 htmlFor="password"
                 className={`flex items-center ${
-                  isDarkTheme ? "text-gray-300" : "text-gray-700"
+                  isDarkTheme ? 'text-gray-300' : 'text-gray-700'
                 }`}
               >
                 <Lock className="w-4 h-4 mr-2 text-teal-600" />
@@ -310,8 +308,8 @@ export default function SignupForm({ initialPage }) {
                 maxLength={20} // Maximum 20 characters (optional)
                 className={`bg-white border-2 border-teal-200 placeholder-gray-500 focus:ring-2 focus:ring-teal-500 ${
                   isDarkTheme
-                    ? "text-gray-200 bg-gray-800 border-gray-600 placeholder-gray-500 focus:ring-teal-400"
-                    : "text-gray-900"
+                    ? 'text-gray-200 bg-gray-800 border-gray-600 placeholder-gray-500 focus:ring-teal-400'
+                    : 'text-gray-900'
                 }`}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -320,7 +318,7 @@ export default function SignupForm({ initialPage }) {
               <Button
                 type="submit"
                 className={`w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 ${
-                  isDarkTheme ? "text-white" : "text-white"
+                  isDarkTheme ? 'text-white' : 'text-white'
                 }`}
                 disabled={isLoading}
               >
@@ -330,14 +328,14 @@ export default function SignupForm({ initialPage }) {
                     Creating Account...
                   </>
                 ) : (
-                  "Sign Up"
+                  'Sign Up'
                 )}
               </Button>
             ) : (
               <Button
                 type="submit"
                 className={`w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 ${
-                  isDarkTheme ? "text-white" : "text-white"
+                  isDarkTheme ? 'text-white' : 'text-white'
                 }`}
                 disabled={isLoading}
               >
@@ -347,7 +345,7 @@ export default function SignupForm({ initialPage }) {
                     Logging in...
                   </>
                 ) : (
-                  "Log In"
+                  'Log In'
                 )}
               </Button>
             )}
@@ -355,17 +353,17 @@ export default function SignupForm({ initialPage }) {
           {
             <p
               className={`mt-6 text-center text-sm ${
-                !isDarkTheme ? "text-gray-900" : "text-gray-50"
+                !isDarkTheme ? 'text-gray-900' : 'text-gray-50'
               }`}
             >
               {signUpPage
-                ? "Already have an account?"
+                ? 'Already have an account?'
                 : "Don't have an account?"}
               <a
                 className="font-medium px-1 text-teal-600 hover:text-teal-500 transition-colors hover:cursor-pointer hover:text-lg"
                 onClick={() => handlePageToggle()}
               >
-                {signUpPage ? "Log in" : "Sign up"}
+                {signUpPage ? 'Log in' : 'Sign up'}
               </a>
             </p>
           }
