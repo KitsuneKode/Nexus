@@ -1,9 +1,9 @@
-import { Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
-const PrivateRoute = ({ Component, redirectPath = "/login" }) => {
+const PrivateRoute = ({ Component, redirectPath = '/login' }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true); // Add loading state
   const isDarkTheme = false;
 
@@ -13,7 +13,7 @@ const PrivateRoute = ({ Component, redirectPath = "/login" }) => {
 
   async function checkAuth() {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
 
       if (!token) {
         setIsAuthenticated(false);
@@ -21,26 +21,29 @@ const PrivateRoute = ({ Component, redirectPath = "/login" }) => {
         return;
       }
 
-      console.log("Token:", token);
+      console.log('Token:', token);
 
-      const response = await fetch("http://localhost:3000/api/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token, // Assuming you're passing the token
-        },
-      });
+      const response = await fetch(
+        'https://api-nexus-kitsunekode.vercel.app/api/auth',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token, // Assuming you're passing the token
+          },
+        }
+      );
 
       if (response.ok) {
         setIsAuthenticated(true);
       } else {
         const errorData = await response.json();
-        setMessage(errorData.message || "Authentication failed");
+        setMessage(errorData.message || 'Authentication failed');
         setIsAuthenticated(false);
       }
     } catch (err) {
-      console.error("Error during authentication:", err);
-      setMessage("An error occurred during authentication");
+      console.error('Error during authentication:', err);
+      setMessage('An error occurred during authentication');
       setIsAuthenticated(false);
     } finally {
       setLoading(false); // Stop loading after response
@@ -53,15 +56,15 @@ const PrivateRoute = ({ Component, redirectPath = "/login" }) => {
       <div
         className={`min-h-screen flex items-center justify-center ${
           isDarkTheme
-            ? "bg-gray-900"
-            : "bg-gradient-to-br from-teal-50 to-blue-50"
+            ? 'bg-gray-900'
+            : 'bg-gradient-to-br from-teal-50 to-blue-50'
         }`}
       >
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-teal-500"></div>
           <h2
             className={`mt-4 text-2xl font-semibold ${
-              isDarkTheme ? "text-white" : "text-gray-800"
+              isDarkTheme ? 'text-white' : 'text-gray-800'
             }`}
           >
             Logging in...
