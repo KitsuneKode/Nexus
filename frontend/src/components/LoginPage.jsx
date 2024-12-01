@@ -25,12 +25,6 @@ export default function SignupForm({ initialPage }) {
   const { toast } = useToast();
 
   useEffect(() => {
-    console.log('Email:', email);
-    console.log('Password', password);
-    console.log('User Name', username);
-  }, [email, password, username]);
-
-  useEffect(() => {
     // Sync the page state based on the URL path
     if (location.pathname === '/signup') {
       setSignUpPage(true);
@@ -65,20 +59,20 @@ export default function SignupForm({ initialPage }) {
 
     if (signUpPage) {
       try {
-        const response = await fetch(
-          'https://api-nexus-kitsunekode.vercel.app/api/signup',
-          {
-            method: 'POST',
-            body: JSON.stringify({
-              username,
-              email,
-              password,
-            }),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        console.log('Creating account...');
+
+        const response = await fetch('http://localhost:3000/api/auth/signup', {
+          method: 'POST',
+          body: JSON.stringify({
+            username,
+            email,
+            password,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        console.log('API response:', response);
         if (response.ok) {
           const data = await response.json();
           setAlert('Account created successfully');
@@ -88,26 +82,26 @@ export default function SignupForm({ initialPage }) {
           setError(
             'Registration failed. Please try again later.' + data.message
           );
+          setIsLoading(false);
+          return;
         }
       } catch (error) {
         setError('An error occurred. Please try again later.' + error);
         console.error('Error:', error);
+        return;
       }
     } else {
       try {
-        const response = await fetch(
-          'https://api-nexus-kitsunekode.vercel.app/api/login',
-          {
-            method: 'POST',
-            body: JSON.stringify({
-              email,
-              password,
-            }),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        const response = await fetch('http://localhost:3000/api/auth/signin', {
+          method: 'POST',
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
         if (response.ok) {
           const data = await response.json();
           localStorage.setItem('token', data.token);
@@ -255,12 +249,12 @@ export default function SignupForm({ initialPage }) {
                   }`}
                 >
                   <User className="w-4 h-4 mr-2 text-teal-600" />
-                  User Name
+                  UserName
                 </Label>
                 <Input
                   id="name"
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="johndoe"
                   required
                   className={`bg-white border-2 border-teal-200 placeholder-gray-500 focus:ring-2 focus:ring-teal-500 ${
                     isDarkTheme

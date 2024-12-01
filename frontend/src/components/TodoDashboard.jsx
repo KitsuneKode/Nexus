@@ -22,17 +22,15 @@ import {
   LogOut,
   User,
   CheckCircle,
+  ChartNoAxesColumnDecreasingIcon,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
 export default function TodoDashboard() {
-  const [todos, setTodos] = useState([
-    { id: 1, text: 'Complete project proposal', completed: false },
-    { id: 2, text: 'Buy groceries', completed: true },
-    { id: 3, text: 'Schedule team meeting', completed: false },
-  ]);
-  const [newTodo, setNewTodo] = useState('');
+  const [todos, setTodos] = useState([]);
+  const [newTodoTitle, setNewTodoTitle] = useState('');
+  const [newTodoDescription, setNewTodoDescription] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +44,6 @@ export default function TodoDashboard() {
 
   // useEffect(() => {
 
-  //   //code to be written yet
   // }, [todos]);
 
   useEffect(() => {
@@ -65,6 +62,21 @@ export default function TodoDashboard() {
       ).matches;
       setIsDarkTheme(prefersDarkScheme);
     }
+    const token = localStorage.getItem('token');
+
+    const fetchTodos = async () => {
+      const response = await fetch('http://localhost:3000/api/todos', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Assuming you're passing the token
+        },
+      });
+
+      const responseData = await response.json();
+      setTodos(responseData.todos);
+    };
+    fetchTodos();
   }, []);
 
   useEffect(() => {
@@ -78,25 +90,36 @@ export default function TodoDashboard() {
   useEffect(() => {
     const completed = todos.filter((todo) => todo.completed).length;
     const total = todos.length;
-    setCompletionPercentage(total > 0 ? (completed / total) * 100 : 0);
+    setCompletionPercentage((completed / total) * 100);
   }, [todos]);
 
-  const addTodo = () => {
-    if (newTodo.trim() !== '') {
-      setIsLoading(true);
-      setTimeout(() => {
-        setTodos([
-          ...todos,
-          { id: Date.now(), text: newTodo, completed: false },
-        ]);
-        setNewTodo('');
-        setIsLoading(false);
-      }, 500);
+  const addTodo = async () => {
+    try {
+      const token = localStorage.getItem('token');
+
+      const response = await fetch('http://localhost:3000/api/todos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Assuming you're passing the token
+        },
+        body: JSON.stringify({
+          title: newTodoTitle,
+          description: newTodoDescription,
+          done: false,
+        }),
+      });
+      const addedTodo = await response.json();
+      setTodos((prevTodos) => [...prevTodos, addedTodo]);
+      setNewTodoTitle('');
+      setNewTodoDescription('');
+    } catch (error) {
+      console.error('Error adding todo:', error);
     }
   };
 
   const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+    setTodos(todos.filter((todo) => id !== id));
   };
 
   const toggleTodo = (id) => {
@@ -107,18 +130,19 @@ export default function TodoDashboard() {
     );
   };
 
-  const startEditing = (id, text) => {
+  const startEditing = (id, title) => {
     setEditingId(id);
-    setEditText(text);
+    setEditText(title);
   };
 
   const saveEdit = () => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === editingId ? { ...todo, text: editText } : todo
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === editingId ? { ...todo, title: editText } : todo
       )
     );
     setEditingId(null);
+    setEditText('');
   };
 
   const toggleTheme = () => {
@@ -209,13 +233,14 @@ export default function TodoDashboard() {
             />
 
             <div className="relative z-10">
+              ``
               <div className="flex justify-between items-center mb-8">
                 <h1
                   className={`text-4xl font-bold ${
                     isDarkTheme ? 'text-white' : 'text-gray-800'
                   }`}
                 >
-                  Elegant Todo Dashboard
+                  Nexus Todo Dashboard
                 </h1>
                 <div className="flex items-center space-x-4">
                   <Button
@@ -262,7 +287,6 @@ export default function TodoDashboard() {
                   </DropdownMenu>
                 </div>
               </div>
-
               {/* Todo Status and Progress Bar */}
               <div
                 className={`mb-6 p-4 rounded-xl ${
@@ -309,12 +333,21 @@ export default function TodoDashboard() {
                   </span>
                 </div>
               </div>
-
               <div className="flex mb-6">
                 <Input
-                  value={newTodo}
-                  onChange={(e) => setNewTodo(e.target.value)}
-                  placeholder="Add a new todo..."
+                  value={newTodoTitle}
+                  onChange={(e) => setNewTodoTitle(e.target.value)}
+                  placeholder="Add a new todo title..."
+                  className={`flex-grow mr-2 ${
+                    isDarkTheme
+                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                      : 'bg-white border-teal-200 text-gray-900 placeholder-gray-500'
+                  } border-2 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300 rounded-xl`}
+                />
+                <Input
+                  value={newTodoDescription}
+                  onChange={(e) => setNewTodoDescription(e.target.value)}
+                  placeholder="Add a new todo description..."
                   className={`flex-grow mr-2 ${
                     isDarkTheme
                       ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
@@ -337,25 +370,24 @@ export default function TodoDashboard() {
                   )}
                 </Button>
               </div>
-
               <div className="space-y-4">
-                {todos.map((todo) => (
+                {todos.map((todo, id) => (
                   <div
-                    key={todo.id}
+                    key={id}
                     className={`flex items-center ${
                       isDarkTheme ? 'bg-gray-700' : 'bg-white'
                     } p-4 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg`}
                   >
                     <Checkbox
                       checked={todo.completed}
-                      onCheckedChange={() => toggleTodo(todo.id)}
+                      onCheckedChange={() => toggleTodo(id)}
                       className={`mr-4 h-5 w-5 border-2 ${
                         isDarkTheme
                           ? 'border-teal-400 text-teal-400'
                           : 'border-teal-500 text-teal-500'
                       } rounded-full`}
                     />
-                    {editingId === todo.id ? (
+                    {editingId === id ? (
                       <Input
                         value={editText}
                         onChange={(e) => setEditText(e.target.value)}
@@ -375,10 +407,12 @@ export default function TodoDashboard() {
                             : 'text-gray-800'
                         }`}
                       >
-                        {todo.text}
+                        <span className="font-bold text-xl">{todo.title}</span>{' '}
+                        <br />
+                        <span>{todo.description}</span>
                       </span>
                     )}
-                    {editingId === todo.id ? (
+                    {editingId === id ? (
                       <Button
                         onClick={saveEdit}
                         className="mr-2 bg-green-500 hover:bg-green-600 text-white rounded-full p-2"
@@ -387,14 +421,14 @@ export default function TodoDashboard() {
                       </Button>
                     ) : (
                       <Button
-                        onClick={() => startEditing(todo.id, todo.text)}
+                        onClick={() => startEditing(id, todo.title)}
                         className="mr-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2"
                       >
                         <Edit2 className="h-4 w-4" />
                       </Button>
                     )}
                     <Button
-                      onClick={() => deleteTodo(todo.id)}
+                      onClick={() => deleteTodo(id)}
                       className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2"
                     >
                       <X className="h-4 w-4" />

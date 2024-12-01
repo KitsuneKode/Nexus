@@ -21,18 +21,16 @@ const PrivateRoute = ({ Component, redirectPath = '/login' }) => {
         return;
       }
 
-      console.log('Token:', token);
+      const response = await fetch('http://localhost:3000/api/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Assuming you're passing the token
+        },
+      });
+      const responseData = await response.json();
 
-      const response = await fetch(
-        'https://api-nexus-kitsunekode.vercel.app/api/auth',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            token, // Assuming you're passing the token
-          },
-        }
-      );
+      console.log(responseData.message);
 
       if (response.ok) {
         setIsAuthenticated(true);
@@ -42,7 +40,7 @@ const PrivateRoute = ({ Component, redirectPath = '/login' }) => {
         setIsAuthenticated(false);
       }
     } catch (err) {
-      console.error('Error during authentication:', err);
+      console.error('Error during authentication:', err.message);
       setMessage('An error occurred during authentication');
       setIsAuthenticated(false);
     } finally {
