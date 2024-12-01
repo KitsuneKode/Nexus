@@ -7,7 +7,11 @@ const router = express.Router();
 //Fetch all todo
 router.get('/', auth, async (req, res) => {
   try {
-    const todos = await Todo.find({ userId: req.userId });
+    const todos = await Todo.find({ userId: req.userId }).select(
+      '-__v -userId'
+    );
+
+    console.log(todos);
     res.status(200).json({
       messsage: 'Todos fetched successfully',
       todos,
