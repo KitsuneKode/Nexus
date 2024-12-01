@@ -61,17 +61,20 @@ export default function SignupForm({ initialPage }) {
       try {
         console.log('Creating account...');
 
-        const response = await fetch('http://localhost:3000/api/auth/signup', {
-          method: 'POST',
-          body: JSON.stringify({
-            username,
-            email,
-            password,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch(
+          'https://api-nexus-kitsunekode.vercel.app/auth/signup',
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              username,
+              email,
+              password,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
         console.log('API response:', response);
         if (response.ok) {
           const data = await response.json();
@@ -92,16 +95,19 @@ export default function SignupForm({ initialPage }) {
       }
     } else {
       try {
-        const response = await fetch('http://localhost:3000/api/auth/signin', {
-          method: 'POST',
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch(
+          'https://api-nexus-kitsunekode.vercel.app/auth/signin',
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              email,
+              password,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
         if (response.ok) {
           const data = await response.json();
           localStorage.setItem('token', data.token);

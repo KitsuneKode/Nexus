@@ -65,13 +65,16 @@ export default function TodoDashboard() {
     const token = localStorage.getItem('token');
 
     const fetchTodos = async () => {
-      const response = await fetch('http://localhost:3000/api/todos', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Assuming you're passing the token
-        },
-      });
+      const response = await fetch(
+        'https://api-nexus-kitsunekode.vercel.app/todos',
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Assuming you're passing the token
+          },
+        }
+      );
 
       const responseData = await response.json();
       setTodos(responseData.todos);
@@ -97,18 +100,21 @@ export default function TodoDashboard() {
     try {
       const token = localStorage.getItem('token');
 
-      const response = await fetch('http://localhost:3000/api/todos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Assuming you're passing the token
-        },
-        body: JSON.stringify({
-          title: newTodoTitle,
-          description: newTodoDescription,
-          done: false,
-        }),
-      });
+      const response = await fetch(
+        'https://api-nexus-kitsunekode.vercel.app/todos',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Assuming you're passing the token
+          },
+          body: JSON.stringify({
+            title: newTodoTitle,
+            description: newTodoDescription,
+            done: false,
+          }),
+        }
+      );
       const addedTodo = await response.json();
       setTodos((prevTodos) => [...prevTodos, addedTodo]);
       setNewTodoTitle('');

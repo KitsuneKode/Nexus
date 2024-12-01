@@ -95,17 +95,17 @@ Here are some example requests using `curl`:
 
 **Signup:**
 ```bash
-curl -X POST http://localhost:3000/api/auth/signup -H "Content-Type: application/json" -d '{"username": "testuser", "email": "test@example.com", "password": "password123"}'
+curl -X POST https://api-nexus-kitsunekode.vercel.app/auth/signup -H "Content-Type: application/json" -d '{"username": "testuser", "email": "test@example.com", "password": "password123"}'
 ```
 
 **Login:**
 ```bash
 
-curl -X POST http://localhost:3000/api/auth/signin -H "Content-Type: application/json" -d '{"email": "test@example.com", "password": "password123"}'
+curl -X POST https://api-nexus-kitsunekode.vercel.app/auth/signin -H "Content-Type: application/json" -d '{"email": "test@example.com", "password": "password123"}'
 ```
 **Create a todo:**
 ```bash
-curl -X POST http://localhost:3000/api/todos -H "Authorization: Bearer <your-jwt-token>" -H "Content-Type: application/json" -d '{"title": "New Todo", "description": "Todo description", "done": false}'
+curl -X POST https://api-nexus-kitsunekode.vercel.app/todos -H "Authorization: Bearer <your-jwt-token>" -H "Content-Type: application/json" -d '{"title": "New Todo", "description": "Todo description", "done": false}'
 ```
 
 

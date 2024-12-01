@@ -21,13 +21,16 @@ const PrivateRoute = ({ Component, redirectPath = '/login' }) => {
         return;
       }
 
-      const response = await fetch('http://localhost:3000/api/auth', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Assuming you're passing the token
-        },
-      });
+      const response = await fetch(
+        'https://api-nexus-kitsunekode.vercel.app/auth',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Assuming you're passing the token
+          },
+        }
+      );
       const responseData = await response.json();
 
       console.log(responseData.message);
