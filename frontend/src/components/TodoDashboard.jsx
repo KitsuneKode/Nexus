@@ -1,31 +1,30 @@
-import { useState, useEffect } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import {
-  PlusCircle,
-  X,
-  Edit2,
-  Save,
-  Loader2,
-  Sun,
-  Moon,
-  LogOut,
-  User,
-  CheckCircle,
-  ChartNoAxesColumnDecreasingIcon,
-} from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import {
+  CheckCircle,
+  Edit2,
+  Loader2,
+  LogOut,
+  Moon,
+  PlusCircle,
+  Save,
+  Sun,
+  User,
+  X,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function TodoDashboard() {
   const [todos, setTodos] = useState([]);
@@ -66,7 +65,7 @@ export default function TodoDashboard() {
 
     const fetchTodos = async () => {
       const response = await fetch(
-        'https://api-nexus-kitsunekode.vercel.app/todos',
+        'https://api-nexus-kitsunekode.vercel.app/api/todos',
         {
           method: 'GET',
           headers: {
@@ -93,30 +92,33 @@ export default function TodoDashboard() {
   useEffect(() => {
     const completed = todos.filter((todo) => todo.completed).length;
     const total = todos.length;
-    setCompletionPercentage((completed / total) * 100);
+    setCompletionPercentage(() =>
+      (completed / total) * 100 ? (completed / total) * 100 : 0
+    );
   }, [todos]);
 
   const addTodo = async () => {
     try {
       const token = localStorage.getItem('token');
+      const newTodoFromUser = {
+        title: newTodoTitle,
+        description: newTodoDescription,
+        done: false,
+      };
+      await fetch('https://api-nexus-kitsunekode.vercel.app/api/todos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Assuming you're passing the token
+        },
+        body: JSON.stringify(newTodoFromUser),
+      });
 
-      const response = await fetch(
-        'https://api-nexus-kitsunekode.vercel.app/todos',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Assuming you're passing the token
-          },
-          body: JSON.stringify({
-            title: newTodoTitle,
-            description: newTodoDescription,
-            done: false,
-          }),
-        }
-      );
-      const addedTodo = await response.json();
-      setTodos((prevTodos) => [...prevTodos, addedTodo]);
+      toast({
+        title: 'New Todo added! ',
+        variant: 'default',
+      });
+      setTodos((prevTodos) => [...prevTodos, newTodoFromUser]);
       setNewTodoTitle('');
       setNewTodoDescription('');
     } catch (error) {
@@ -124,8 +126,22 @@ export default function TodoDashboard() {
     }
   };
 
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => id !== id));
+  const deleteTodo = async (id) => {
+    const token = localStorage.getItem('token');
+
+    await fetch(`https://api-nexus-kitsunekode.vercel.app/api/todos/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    toast({
+      title: 'Todo deleted!',
+      variant: 'destructive',
+    });
+
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   const toggleTodo = (id) => {

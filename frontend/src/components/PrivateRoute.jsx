@@ -22,7 +22,7 @@ const PrivateRoute = ({ Component, redirectPath = '/login' }) => {
       }
 
       const response = await fetch(
-        'https://api-nexus-kitsunekode.vercel.app/auth',
+        'https://api-nexus-kitsunekode.vercel.app/api/auth',
         {
           method: 'POST',
           headers: {

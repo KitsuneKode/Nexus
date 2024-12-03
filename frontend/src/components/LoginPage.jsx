@@ -62,7 +62,7 @@ export default function SignupForm({ initialPage }) {
         console.log('Creating account...');
 
         const response = await fetch(
-          'https://api-nexus-kitsunekode.vercel.app/auth/signup',
+          'https://api-nexus-kitsunekode.vercel.app/api/auth/signup',
           {
             method: 'POST',
             body: JSON.stringify({
@@ -96,7 +96,7 @@ export default function SignupForm({ initialPage }) {
     } else {
       try {
         const response = await fetch(
-          'https://api-nexus-kitsunekode.vercel.app/auth/signin',
+          'https://api-nexus-kitsunekode.vercel.app/api/auth/signin',
           {
             method: 'POST',
             body: JSON.stringify({
